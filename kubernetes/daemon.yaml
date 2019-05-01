@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: button-daemon
+  namespace: chore-nandy-io
+  labels:
+    app: button-daemon
+spec:
+  selector:
+    matchLabels:
+      app: button-daemon
+  template:
+    metadata:
+      labels:
+        app: button-daemon
+    spec:
+      nodeSelector:
+        chore.nandy.io/button: enabled
+      volumes:
+      - name: dev-i2c-1
+        hostPath:
+          path: /dev/i2c-1
+      - name: sys-class-gpio
+        hostPath:
+          path: /sys/class/gpio
+      - name: sys-devices
+        hostPath:
+          path: /sys/devices
+      - name: subscriptions
+        configMap:
+          name: subscriptions
+      containers:
+      - name: button-daemon
+        image: docker.io/nandyio/button-daemon:0.1
+        imagePullPolicy: Always
+        env:
+        - name: K8S_NODE
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: REDIS_CHANNEL
+          value: nandy.io/chore
+        - name: GPIO_PORT
+          value: "4"
+        - name: SLEEP
+          value: "0.1"
+        volumeMounts:
+        - mountPath: /dev/i2c-1
+          name: dev-i2c-1
+        - mountPath: /sys/class/gpio
+          name: sys-class-gpio
+        - mountPath: /sys/devices
+          name: sys-devices
+        - name: subscriptions
+          mountPath: /opt/nandy-io/subscriptions
+        securityContext:
+          privileged: true
