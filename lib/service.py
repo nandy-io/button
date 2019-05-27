@@ -20,13 +20,10 @@ class Daemon(object):
 
         self.node = os.environ['K8S_NODE']
         self.sleep = float(os.environ['SLEEP'])
-
-        with open("/opt/nandy-io/subscriptions/redis.yaml", "r") as redis_file:
-            redis_config = yaml.safe_load(redis_file)
-
-        self.redis = redis.StrictRedis(host=redis_config["host"], port=redis_config["port"])
-
+    
+        self.redis = redis.StrictRedis(host=os.environ['REDIS_HOST'], port=int(os.environ['REDIS_PORT']))
         self.channel = os.environ['REDIS_CHANNEL']
+
         self.gpio_port = int(os.environ['GPIO_PORT'])
 
     def setup(self):

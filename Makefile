@@ -2,11 +2,12 @@ MACHINE=$(shell uname -m)
 ACCOUNT=nandyio
 IMAGE=button-daemon
 VERSION?=0.1
-VOLUMES=-v ${PWD}/subscriptions/:/opt/nandy-io/subscriptions/ \
-		-v ${PWD}/lib/:/opt/nandy-io/lib/ \
+VOLUMES=-v ${PWD}/lib/:/opt/nandy-io/lib/ \
 		-v ${PWD}/bin/:/opt/nandy-io/bin/ \
 		-v ${PWD}/test/:/opt/nandy-io/test/
-
+ENVIRONMENT=-e REDIS_HOST=host.docker.internal \
+			-e REDIS_PORT=6379 \
+			-e REDIS_CHANNEL=nandy.io/chore
 .PHONY: build shell test run push create update delete
 
 ifeq ($(MACHINE),armv7l)
@@ -17,13 +18,13 @@ build:
 	docker build . -f $(MACHINE).Dockerfile -t $(ACCOUNT)/$(IMAGE):$(VERSION)
 
 shell:
-	docker run $(DEVICE)-it $(VOLUMES) $(ACCOUNT)/$(IMAGE):$(VERSION) sh
+	docker run $(DEVICE)-it $(VOLUMES) $(ENVIRONMENT) $(ACCOUNT)/$(IMAGE):$(VERSION) sh
 
 test:
 	docker run $(DEVICE) -it $(VOLUMES) $(ACCOUNT)/$(IMAGE):$(VERSION) sh -c "coverage run -m unittest discover -v test && coverage report -m --include lib/service.py"
 
 run:
-	docker run $(DEVICE) -it $(VOLUMES) --rm -h $(IMAGE) $(ACCOUNT)/$(IMAGE):$(VERSION)
+	docker run $(DEVICE) -it $(VOLUMES) $(ENVIRONMENT) --rm -h $(IMAGE) $(ACCOUNT)/$(IMAGE):$(VERSION)
 
 push:
 ifeq ($(MACHINE),armv7l)

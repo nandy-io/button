@@ -32,6 +32,8 @@ class TestService(unittest.TestCase):
 
     @mock.patch.dict(os.environ, {
         "K8S_NODE": "pushy",
+        "REDIS_HOST": "most.com",
+        "REDIS_PORT": "667",
         "REDIS_CHANNEL": "stuff",
         "GPIO_PORT": "6",
         "SLEEP": "0.7"
@@ -43,6 +45,8 @@ class TestService(unittest.TestCase):
 
     @mock.patch.dict(os.environ, {
         "K8S_NODE": "pushy",
+        "REDIS_HOST": "most.com",
+        "REDIS_PORT": "667",
         "REDIS_CHANNEL": "stuff",
         "GPIO_PORT": "6",
         "SLEEP": "0.7"
@@ -53,8 +57,8 @@ class TestService(unittest.TestCase):
         daemon = service.Daemon()
 
         self.assertEqual(daemon.node, "pushy")
-        self.assertEqual(daemon.redis.host, "host.docker.internal")
-        self.assertEqual(daemon.redis.port, 6379)
+        self.assertEqual(daemon.redis.host, "most.com")
+        self.assertEqual(daemon.redis.port, 667)
         self.assertEqual(daemon.channel, "stuff")
         self.assertEqual(daemon.gpio_port, 6)
         self.assertEqual(daemon.sleep, 0.7)

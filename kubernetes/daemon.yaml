@@ -26,9 +26,6 @@ spec:
       - name: sys-devices
         hostPath:
           path: /sys/devices
-      - name: subscriptions
-        configMap:
-          name: subscriptions
       containers:
       - name: button-daemon
         image: docker.io/nandyio/button-daemon:0.1
@@ -38,6 +35,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
+        - name: REDIS_HOST
+          value: db.redis-klot-io
+        - name: REDIS_PORT
+          value: "6379"
         - name: REDIS_CHANNEL
           value: nandy.io/chore
         - name: GPIO_PORT
@@ -51,7 +52,5 @@ spec:
           name: sys-class-gpio
         - mountPath: /sys/devices
           name: sys-devices
-        - name: subscriptions
-          mountPath: /opt/nandy-io/subscriptions
         securityContext:
           privileged: true
