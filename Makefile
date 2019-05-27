@@ -34,12 +34,15 @@ else
 endif
 
 install:
+	kubectl create -f kubernetes/namespace.yaml
 	kubectl create -f kubernetes/daemon.yaml
 
 update:
+	kubectl replace -f kubernetes/namespace.yaml
 	kubectl replace -f kubernetes/daemon.yaml
 
 remove:
+	-kubectl delete -f kubernetes/namespace.yaml
 	-kubectl delete -f kubernetes/daemon.yaml
 
 reset: remove install

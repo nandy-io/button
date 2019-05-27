@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: button-daemon
-  namespace: chore-nandy-io
+  name: daemon
+  namespace: button-nandy-io
   labels:
-    app: button-daemon
+    app: daemon
 spec:
   selector:
     matchLabels:
-      app: button-daemon
+      app: daemon
   template:
     metadata:
       labels:
-        app: button-daemon
+        app: daemon
     spec:
       nodeSelector:
-        chore.nandy.io/button: enabled
+        button.nandy.io/button: enabled
       volumes:
       - name: dev-i2c-1
         hostPath:
@@ -27,7 +27,7 @@ spec:
         hostPath:
           path: /sys/devices
       containers:
-      - name: button-daemon
+      - name: daemon
         image: docker.io/nandyio/button-daemon:0.1
         imagePullPolicy: Always
         env:
