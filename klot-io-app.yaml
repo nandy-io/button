@@ -13,5 +13,7 @@ spec:
   requires:
   - site: github.com
     repo: klot-io/redis
-  - site: github.com
-    repo: nandy-io/chore
+  labels:
+  - name: button
+    description: Where there is a button attached
+    value: enabled
