@@ -2,8 +2,8 @@ FROM resin/rpi-raspbian
 
 RUN apt-get update && \
     apt-get install -y python-pip python-dev python-rpi.gpio rpi-update && \
-	rpi-update && \
-	mkdir -p /opt/nandy-io
+    SKIP_WARNING=1 rpi-update && \
+    mkdir -p /opt/nandy-io
 
 WORKDIR /opt/nandy-io
 
