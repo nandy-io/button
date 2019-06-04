@@ -1,2 +1,2 @@
-# button-daemon
-Button Daemon to create Events
+# button
+Button App
