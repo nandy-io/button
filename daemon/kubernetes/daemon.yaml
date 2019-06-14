@@ -40,7 +40,7 @@ spec:
         - name: REDIS_PORT
           value: "6379"
         - name: REDIS_CHANNEL
-          value: nandy.io/chore
+          value: nandy.io/button
         - name: GPIO_PORT
           value: "4"
         - name: SLEEP
