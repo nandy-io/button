@@ -1,4 +1,4 @@
-FROM resin/rpi-raspbian
+FROM klot-io/rpi-raspbian
 
 RUN apt-get update && \
     apt-get install -y python-pip python-dev python-rpi.gpio rpi-update && \
