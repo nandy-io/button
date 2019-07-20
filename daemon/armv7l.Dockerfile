@@ -1,4 +1,4 @@
-FROM klotio/rpi-raspbian
+FROM klotio/rpi-raspbian:0.1
 
 RUN apt-get update && \
     apt-get install -y python-pip python-dev python-rpi.gpio rpi-update && \
