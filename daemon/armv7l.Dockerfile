@@ -1,8 +1,7 @@
 FROM klotio/rpi-raspbian:0.1
 
 RUN apt-get update && \
-    apt-get install -y python-pip python-dev python-rpi.gpio rpi-update && \
-    SKIP_WARNING=1 rpi-update && \
+    apt-get install -y python-dev python-rpi.gpio && \
     mkdir -p /opt/service
 
 WORKDIR /opt/service
