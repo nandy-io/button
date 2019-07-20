@@ -2,9 +2,9 @@ MACHINE=$(shell uname -m)
 ACCOUNT=nandyio
 IMAGE=button-daemon
 VERSION?=0.1
-VOLUMES=-v ${PWD}/lib/:/opt/nandy-io/lib/ \
-		-v ${PWD}/bin/:/opt/nandy-io/bin/ \
-		-v ${PWD}/test/:/opt/nandy-io/test/
+VOLUMES=-v ${PWD}/lib/:/opt/service/lib/ \
+		-v ${PWD}/bin/:/opt/service/bin/ \
+		-v ${PWD}/test/:/opt/service/test/
 ENVIRONMENT=-e REDIS_HOST=host.docker.internal \
 			-e REDIS_PORT=6379 \
 			-e REDIS_CHANNEL=nandy.io/chore

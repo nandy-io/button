@@ -3,9 +3,9 @@ FROM resin/rpi-raspbian
 RUN apt-get update && \
     apt-get install -y python-pip python-dev python-rpi.gpio rpi-update && \
     SKIP_WARNING=1 rpi-update && \
-    mkdir -p /opt/nandy-io
+    mkdir -p /opt/service
 
-WORKDIR /opt/nandy-io
+WORKDIR /opt/service
 
 ADD requirements.txt .
 
@@ -15,6 +15,6 @@ ADD bin bin
 ADD lib lib
 ADD test test
 
-ENV PYTHONPATH "/opt/nandy-io/lib:${PYTHONPATH}"
+ENV PYTHONPATH "/opt/service/lib:${PYTHONPATH}"
 
-CMD "/opt/nandy-io/bin/daemon.py"
+CMD "/opt/service/bin/daemon.py"
