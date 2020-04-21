@@ -1,11 +1,10 @@
 apiVersion: klot.io/v1
-kind: App
+kind: KlotIOApp
 metadata:
   name: button.nandy.io
-  version: v0.1
-  description: Button - Nandy I/O
 spec:
   namespace: button-nandy-io
+  description: Button - Nandy I/O
   manifests:
   - path: kubernetes/namespace.yaml
   - path: daemon/kubernetes/daemon.yaml
@@ -14,7 +13,7 @@ spec:
     source:
       site: github.com
       repo: klot-io/redis
-  labels:
+  settings:
   - name: button
     description: Where there is a button attached
-    value: enabled
+    node: enabled
