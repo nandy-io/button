@@ -16,4 +16,5 @@ spec:
   settings:
   - name: button
     description: Where there is a button attached
+    multi: true
     node: enabled
