@@ -6,7 +6,6 @@ spec:
   namespace: button-nandy-io
   description: Button - Nandy I/O
   manifests:
-  - path: kubernetes/namespace.yaml
   - path: daemon/kubernetes/daemon.yaml
   requires:
   - name: redis.klot.io
