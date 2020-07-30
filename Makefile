@@ -1,14 +1,15 @@
-VERSION?=0.2
-NAMESPACE=button-nandy-io
-.PHONY: install remove reset tag untag
+VERSION?=0.3
+TILT_PORT=26766
+.PHONY: up down tag untag
 
-install:
-	-kubectl create ns $(NAMESPACE)
+up:
+	kubectx docker-desktop
+	-kubectl label node docker-desktop button.nandy.io/button=enabled
+	tilt --port $(TILT_PORT) up
 
-remove:
-	-kubectl delete ns $(NAMESPACE)
-
-reset: remove install
+down:
+	kubectx docker-desktop
+	tilt down
 
 tag:
 	-git tag -a "v$(VERSION)" -m "Version $(VERSION)"

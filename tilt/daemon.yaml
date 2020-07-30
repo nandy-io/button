@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemon
+  namespace: button-nandy-io
+spec:
+  template:
+    spec:
+      volumes:
+      - name: daemon
+      containers:
+      - name: daemon
+        image: daemon-button-nandy-io
+        imagePullPolicy: Never
+        command: ["tail", "-f", "/dev/null"]
