@@ -34,7 +34,7 @@ class Daemon(object):
         RPi.GPIO.setmode(RPi.GPIO.BCM)
         RPi.GPIO.setup(self.gpio_port, RPi.GPIO.IN, pull_up_down=RPi.GPIO.PUD_DOWN)
 
-    def push(self):
+    def press(self):
         """
         Pushes the button
         """
@@ -56,7 +56,7 @@ class Daemon(object):
         time.sleep(self.hold)
 
         if RPi.GPIO.input(self.gpio_port):
-            self.push()
+            self.press()
 
     def run(self):
         """

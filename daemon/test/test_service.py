@@ -75,11 +75,11 @@ class TestService(unittest.TestCase):
         mock_setup.assert_called_once_with(6, RPi.GPIO.IN, pull_up_down=RPi.GPIO.PUD_DOWN)
 
     @unittest.mock.patch("service.time.time")
-    def test_process(self, mock_time):
+    def test_press(self, mock_time):
 
         mock_time.return_value = 7
 
-        self.daemon.push()
+        self.daemon.press()
 
         self.assertEqual(self.daemon.redis.channel, "stuff")
         self.assertEqual(json.loads(self.daemon.redis.messages[0]), {
