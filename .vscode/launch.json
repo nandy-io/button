@@ -5,7 +5,7 @@
             "name": "daemon",
             "type": "python",
             "request": "attach",
-            "port": 26734,
+            "port": 26534,
             "host": "localhost",
             "pathMappings": [
                 {
