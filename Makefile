@@ -1,5 +1,5 @@
 VERSION?=0.3
-TILT_PORT=26766
+TILT_PORT=26566
 .PHONY: up down tag untag
 
 up:
