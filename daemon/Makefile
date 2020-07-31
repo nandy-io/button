@@ -1,12 +1,12 @@
 ACCOUNT=nandyio
 IMAGE=button-daemon
 VERSION?=0.2
+DEBUG_PORT=26534
 VOLUMES=-v ${PWD}/lib/:/opt/service/lib/ \
 		-v ${PWD}/bin/:/opt/service/bin/ \
 		-v ${PWD}/test/:/opt/service/test/
 ENVIRONMENT=-e PYTHONDONTWRITEBYTECODE=1 \
 			-e PYTHONUNBUFFERED=1
-DEBUG_PORT=26534
 
 .PHONY: cross build shell debug test push install update remove reset
 
