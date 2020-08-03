@@ -4,7 +4,6 @@ Main module for daemon
 
 import os
 import time
-import traceback
 
 import json
 import yaml
@@ -18,9 +17,10 @@ class Daemon(object):
 
     def __init__(self):
 
-        self.node = os.environ['K8S_NODE']
+        self.node = os.environ['NODE_NAME']
+        self.hold = float(os.environ['HOLD'])
         self.sleep = float(os.environ['SLEEP'])
-    
+
         self.redis = redis.StrictRedis(host=os.environ['REDIS_HOST'], port=int(os.environ['REDIS_PORT']))
         self.channel = os.environ['REDIS_CHANNEL']
 
@@ -31,8 +31,20 @@ class Daemon(object):
         Sets up the GPIO modes and pins and pubsub
         """
 
-        RPi.GPIO.setmode(RPi.GPIO.BCM)  
+        RPi.GPIO.setmode(RPi.GPIO.BCM)
         RPi.GPIO.setup(self.gpio_port, RPi.GPIO.IN, pull_up_down=RPi.GPIO.PUD_DOWN)
+
+    def press(self):
+        """
+        Pushes the button
+        """
+
+        self.redis.publish(self.channel, json.dumps({
+            "node": self.node,
+            "timestamp": time.time(),
+            "type": "rising",
+            "gpio_port": self.gpio_port
+        }))
 
     def process(self):
         """
@@ -41,16 +53,11 @@ class Daemon(object):
 
         RPi.GPIO.wait_for_edge(self.gpio_port, RPi.GPIO.RISING)
 
-        time.sleep(self.sleep)
+        time.sleep(self.hold)
 
         if RPi.GPIO.input(self.gpio_port):
-            self.redis.publish(self.channel, json.dumps({
-                "node": self.node,
-                "timestamp": time.time(),
-                "type": "rising",
-                "gpio_port": self.gpio_port
-            }))
-            
+            self.press()
+
     def run(self):
         """
         Runs the daemon
@@ -59,8 +66,5 @@ class Daemon(object):
         self.setup()
 
         while True:
-            try:
-                self.process()
-            except Exception as exception:
-                print(exception)
-                print(traceback.format_exc())
+            self.process()
+            time.sleep(self.sleep)
