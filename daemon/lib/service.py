@@ -10,7 +10,7 @@ import yaml
 import redis
 import RPi.GPIO
 
-import klotio.logger
+import klotio_logger
 
 class Daemon(object):
     """
@@ -28,7 +28,7 @@ class Daemon(object):
 
         self.gpio_port = int(os.environ['GPIO_PORT'])
 
-        self.logger = klotio.logger.setup("nandy-io-button-daemon")
+        self.logger = klotio_logger.setup("nandy-io-button-daemon")
 
         self.logger.debug("settings", extra={
             "settings": {

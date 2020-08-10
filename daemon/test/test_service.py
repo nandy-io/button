@@ -1,6 +1,6 @@
 import unittest
 import unittest.mock
-import klotio.unittest
+import klotio_unittest
 
 import os
 import sys
@@ -13,7 +13,7 @@ sys.modules["RPi.GPIO"] = unittest.mock.MagicMock()
 import RPi.GPIO
 import service
 
-class TestService(klotio.unittest.TestCase):
+class TestService(klotio_unittest.TestCase):
 
     @unittest.mock.patch.dict(os.environ, {
         "NODE_NAME": "pushy",
@@ -24,8 +24,8 @@ class TestService(klotio.unittest.TestCase):
         "HOLD": "0.7",
         "SLEEP": "7.0"
     })
-    @unittest.mock.patch("redis.Redis", klotio.unittest.MockRedis)
-    @unittest.mock.patch("klotio.logger.setup", klotio.unittest.MockLogger)
+    @unittest.mock.patch("redis.Redis", klotio_unittest.MockRedis)
+    @unittest.mock.patch("klotio_logger.setup", klotio_unittest.MockLogger)
     def setUp(self):
 
         self.daemon = service.Daemon()
@@ -39,8 +39,8 @@ class TestService(klotio.unittest.TestCase):
         "HOLD": "0.7",
         "SLEEP": "7.0"
     })
-    @unittest.mock.patch("redis.Redis", klotio.unittest.MockRedis)
-    @unittest.mock.patch("klotio.logger.setup", klotio.unittest.MockLogger)
+    @unittest.mock.patch("redis.Redis", klotio_unittest.MockRedis)
+    @unittest.mock.patch("klotio_logger.setup", klotio_unittest.MockLogger)
     def test___init___(self):
 
         daemon = service.Daemon()
