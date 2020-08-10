@@ -53,6 +53,8 @@ class TestService(klotio_unittest.TestCase):
         self.assertEqual(daemon.hold, 0.7)
         self.assertEqual(daemon.sleep, 7.0)
 
+        self.assertEqual(daemon.logger.name, "nandy-io-button-daemon")
+
         self.assertLogged(daemon.logger, "debug", "settings", extra={
             "settings": {
                 "node": "pushy",
