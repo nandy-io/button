@@ -25,7 +25,7 @@ class TestService(klotio_unittest.TestCase):
         "SLEEP": "7.0"
     })
     @unittest.mock.patch("redis.Redis", klotio_unittest.MockRedis)
-    @unittest.mock.patch("klotio_logger.setup", klotio_unittest.MockLogger)
+    @unittest.mock.patch("klotio.logger", klotio_unittest.MockLogger)
     def setUp(self):
 
         self.daemon = service.Daemon()
@@ -40,7 +40,7 @@ class TestService(klotio_unittest.TestCase):
         "SLEEP": "7.0"
     })
     @unittest.mock.patch("redis.Redis", klotio_unittest.MockRedis)
-    @unittest.mock.patch("klotio_logger.setup", klotio_unittest.MockLogger)
+    @unittest.mock.patch("klotio.logger", klotio_unittest.MockLogger)
     def test___init___(self):
 
         daemon = service.Daemon()
