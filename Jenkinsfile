@@ -16,13 +16,6 @@ pipeline {
                 }
             }
         }
-        stage('Setup daemon') {
-            steps {
-                dir('daemon') {
-                    sh 'make setup'
-                }
-            }
-        }
         stage('Push daemon') {
             when {
                 branch 'master'
