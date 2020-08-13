@@ -30,13 +30,15 @@ class Daemon(object):
 
         self.logger = klotio.logger("nandy-io-button-daemon")
 
-        self.logger.debug("settings", extra={
-            "settings": {
+        self.logger.debug("init", extra={
+            "init": {
                 "node": self.node,
                 "hold": self.hold,
                 "sleep": self.sleep,
-                "redis": str(self.redis),
-                "channel": self.channel,
+                "redis": {
+                    "connection": str(self.redis),
+                    "channel": self.channel
+                },
                 "gpio_port": self.gpio_port
             }
         })
