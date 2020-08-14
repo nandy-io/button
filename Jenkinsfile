@@ -2,21 +2,21 @@ pipeline {
     agent any
 
     stages {
-        stage('Build daemon') {
+        stage('build daemon') {
             steps {
                 dir('daemon') {
                     sh 'make build'
                 }
             }
         }
-        stage('Test daemon') {
+        stage('test daemon') {
             steps {
                 dir('daemon') {
                     sh 'make test'
                 }
             }
         }
-        stage('Push daemon') {
+        stage('push daemon') {
             when {
                 branch 'master'
             }
