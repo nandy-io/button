@@ -11,3 +11,6 @@ spec:
         image: daemon-button-nandy-io
         imagePullPolicy: Never
         command: ["tail", "-f", "/dev/null"]
+        env:
+        - name: LOG_LEVEL
+          value: WARNING

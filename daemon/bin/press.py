@@ -9,4 +9,4 @@ sys.modules["RPi.GPIO"] = unittest.mock.MagicMock()
 
 import service
 
-service.Daemon().push()
+service.Daemon().press()

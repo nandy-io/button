@@ -10,6 +10,8 @@ import yaml
 import redis
 import RPi.GPIO
 
+import klotio
+
 class Daemon(object):
     """
     Main class for daemon
@@ -21,15 +23,32 @@ class Daemon(object):
         self.hold = float(os.environ['HOLD'])
         self.sleep = float(os.environ['SLEEP'])
 
-        self.redis = redis.StrictRedis(host=os.environ['REDIS_HOST'], port=int(os.environ['REDIS_PORT']))
+        self.redis = redis.Redis(host=os.environ['REDIS_HOST'], port=int(os.environ['REDIS_PORT']))
         self.channel = os.environ['REDIS_CHANNEL']
 
         self.gpio_port = int(os.environ['GPIO_PORT'])
+
+        self.logger = klotio.logger("nandy-io-button-daemon")
+
+        self.logger.debug("init", extra={
+            "init": {
+                "node": self.node,
+                "hold": self.hold,
+                "sleep": self.sleep,
+                "redis": {
+                    "connection": str(self.redis),
+                    "channel": self.channel
+                },
+                "gpio_port": self.gpio_port
+            }
+        })
 
     def setup(self):
         """
         Sets up the GPIO modes and pins and pubsub
         """
+
+        self.logger.info("setting up")
 
         RPi.GPIO.setmode(RPi.GPIO.BCM)
         RPi.GPIO.setup(self.gpio_port, RPi.GPIO.IN, pull_up_down=RPi.GPIO.PUD_DOWN)
@@ -39,19 +58,27 @@ class Daemon(object):
         Pushes the button
         """
 
-        self.redis.publish(self.channel, json.dumps({
+        press = {
             "node": self.node,
             "timestamp": time.time(),
             "type": "rising",
             "gpio_port": self.gpio_port
-        }))
+        }
+
+        self.logger.info("press", extra={"channel": self.channel, "press": press})
+
+        self.redis.publish(self.channel, json.dumps(press))
 
     def process(self):
         """
         Processes a button being pushed
         """
 
+        self.logger.debug("waiting")
+
         RPi.GPIO.wait_for_edge(self.gpio_port, RPi.GPIO.RISING)
+
+        self.logger.debug("rising")
 
         time.sleep(self.hold)
 

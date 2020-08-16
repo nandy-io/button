@@ -1,5 +1,6 @@
 import unittest
 import unittest.mock
+import klotio_unittest
 
 import os
 import sys
@@ -12,22 +13,7 @@ sys.modules["RPi.GPIO"] = unittest.mock.MagicMock()
 import RPi.GPIO
 import service
 
-class MockRedis(object):
-
-    def __init__(self, host, port):
-
-        self.host = host
-        self.port = port
-        self.channel = None
-        self.messages = []
-
-    def publish(self, channel, message):
-
-        self.channel = channel
-        self.messages.append(message)
-
-
-class TestService(unittest.TestCase):
+class TestService(klotio_unittest.TestCase):
 
     @unittest.mock.patch.dict(os.environ, {
         "NODE_NAME": "pushy",
@@ -38,7 +24,8 @@ class TestService(unittest.TestCase):
         "HOLD": "0.7",
         "SLEEP": "7.0"
     })
-    @unittest.mock.patch("redis.StrictRedis", MockRedis)
+    @unittest.mock.patch("redis.Redis", klotio_unittest.MockRedis)
+    @unittest.mock.patch("klotio.logger", klotio_unittest.MockLogger)
     def setUp(self):
 
         self.daemon = service.Daemon()
@@ -52,7 +39,8 @@ class TestService(unittest.TestCase):
         "HOLD": "0.7",
         "SLEEP": "7.0"
     })
-    @unittest.mock.patch("redis.StrictRedis", MockRedis)
+    @unittest.mock.patch("redis.Redis", klotio_unittest.MockRedis)
+    @unittest.mock.patch("klotio.logger", klotio_unittest.MockLogger)
     def test___init___(self):
 
         daemon = service.Daemon()
@@ -65,6 +53,21 @@ class TestService(unittest.TestCase):
         self.assertEqual(daemon.hold, 0.7)
         self.assertEqual(daemon.sleep, 7.0)
 
+        self.assertEqual(daemon.logger.name, "nandy-io-button-daemon")
+
+        self.assertLogged(daemon.logger, "debug", "init", extra={
+            "init": {
+                "node": "pushy",
+                "hold": 0.7,
+                "sleep": 7.0,
+                "redis": {
+                    "connection": "MockRedis<host=most.com,port=667>",
+                    "channel": "stuff"
+                },
+                "gpio_port": 6
+            }
+        })
+
     @unittest.mock.patch("RPi.GPIO.setmode")
     @unittest.mock.patch("RPi.GPIO.setup")
     def test_setup(self, mock_setup, mock_setmode):
@@ -73,6 +76,8 @@ class TestService(unittest.TestCase):
 
         mock_setmode.assert_called_once_with(RPi.GPIO.BCM)
         mock_setup.assert_called_once_with(6, RPi.GPIO.IN, pull_up_down=RPi.GPIO.PUD_DOWN)
+
+        self.assertLogged(self.daemon.logger, "info", "setting up")
 
     @unittest.mock.patch("service.time.time")
     def test_press(self, mock_time):
@@ -87,6 +92,16 @@ class TestService(unittest.TestCase):
             "timestamp": 7,
             "type": "rising",
             "gpio_port": 6
+        })
+
+        self.assertLogged(self.daemon.logger, "info", "press", extra={
+            "channel": "stuff",
+            "press": {
+                "node": "pushy",
+                "timestamp": 7,
+                "type": "rising",
+                "gpio_port": 6
+            }
         })
 
     @unittest.mock.patch("RPi.GPIO.wait_for_edge")
@@ -111,6 +126,9 @@ class TestService(unittest.TestCase):
             "type": "rising",
             "gpio_port": 6
         })
+
+        self.assertLogged(self.daemon.logger, "debug", "waiting")
+        self.assertLogged(self.daemon.logger, "debug", "rising")
 
     @unittest.mock.patch("RPi.GPIO.setmode")
     @unittest.mock.patch("RPi.GPIO.setup")

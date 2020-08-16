@@ -47,6 +47,8 @@ spec:
           value: "0.2"
         - name: SLEEP
           value: "2"
+        - name: LOG_LEVEL
+          value: WARNING
         volumeMounts:
         - mountPath: /dev/i2c-1
           name: dev-i2c-1
