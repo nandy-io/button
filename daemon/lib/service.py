@@ -2,17 +2,18 @@
 Main module for daemon
 """
 
+# pylint: disable=no-member
+
 import os
 import time
 
 import json
-import yaml
 import redis
 import RPi.GPIO
 
 import klotio
 
-class Daemon(object):
+class Daemon:
     """
     Main class for daemon
     """

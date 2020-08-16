@@ -16,6 +16,13 @@ pipeline {
                 }
             }
         }
+        stage('lint daemon') {
+            steps {
+                dir('daemon') {
+                    sh 'make lint'
+                }
+            }
+        }
         stage('push daemon') {
             when {
                 branch 'master'
